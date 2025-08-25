@@ -8,7 +8,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
   const { firstName, lastName, email } = applicantData;
   
   return {
-    from: 'MyInvestar <onboarding@resend.dev>', // Using test domain for now
+    from: 'MyInvestar <hello@myinvestar.ng>', // Now using your verified domain
     to: [email],
     subject: 'Star Ambassador Application Received - MyInvestar',
     html: `
