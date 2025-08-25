@@ -1,22 +1,134 @@
 // netlify/functions/send-email.js
 const { Resend } = require('resend');
 
-exports.handler = async (event, context) => {
-  // Replace with your actual domain - this is crucial!
-  const ALLOWED_ORIGIN = 'https://myinvestar.ng'; // or wherever your site is hosted
-  
-  const headers = {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Max-Age': '86400', // 24 hours
-  };
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-  // Handle preflight OPTIONS request
+// Email template function
+const getConfirmationEmailTemplate = (applicantData) => {
+  const { firstName, lastName, email } = applicantData;
+  
+  return {
+    from: 'MyInvestar <onboarding@resend.dev>', // Using test domain for now
+    to: [email],
+    subject: 'Star Ambassador Application Received - MyInvestar',
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              line-height: 1.6; 
+              color: #333; 
+              max-width: 600px; 
+              margin: 0 auto; 
+              padding: 20px;
+              background-color: #f4f4f4;
+            }
+            .container {
+              background: white;
+              padding: 30px;
+              border-radius: 8px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .logo {
+              max-width: 180px;
+              margin-bottom: 20px;
+            }
+            .highlight {
+              background: #f8f9ff;
+              padding: 15px;
+              border-left: 4px solid #6366f1;
+              margin: 20px 0;
+            }
+            .button {
+              display: inline-block;
+              background: #6366f1;
+              color: white;
+              padding: 12px 24px;
+              text-decoration: none;
+              border-radius: 5px;
+              margin: 10px 0;
+            }
+            .footer {
+              text-align: center;
+              font-size: 14px;
+              color: #666;
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #eee;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <img src="https://myinvestar.ng/images/myinvestar_logo_gold.webp" alt="MyInvestar" class="logo">
+              <h1 style="color: #6366f1; margin: 0;">Thank You, ${firstName}!</h1>
+            </div>
+            
+            <div class="content">
+              <p>Dear ${firstName} ${lastName},</p>
+              
+              <p>Thank you for your interest in becoming a MyInvestar Star Ambassador! We have successfully received your application and are excited about the possibility of having you join our team.</p>
+              
+              <div class="highlight">
+                <h3 style="margin-top: 0; color: #6366f1;">What happens next?</h3>
+                <ul>
+                  <li><strong>Review Process:</strong> Our team will carefully review your application within 3-5 business days</li>
+                  <li><strong>Evaluation:</strong> We'll assess your profile, experience, and motivation</li>
+                  <li><strong>Next Steps:</strong> If selected, we'll contact you for the next phase of the application process</li>
+                </ul>
+              </div>
+              
+              <p>As a Star Ambassador, you'll have the opportunity to:</p>
+              <ul>
+                <li>Master the art of investing and financial literacy</li>
+                <li>Build wealth while expanding your professional network</li>
+                <li>Earn lucrative commissions through our competitive structure</li>
+                <li>Join a thriving community of driven individuals</li>
+                <li>Develop essential skills in sales, marketing, and financial communication</li>
+              </ul>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://play.google.com/store/apps/details?id=com.firstally.myinvestar&pli=1" class="button">Download Android App</a>
+                <a href="https://apps.apple.com/ng/app/myInvester/id1620126521" class="button">Download iOS App</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p>If you have any questions, feel free to contact us at <a href="mailto:hello@myinvestar.ng">hello@myinvestar.ng</a></p>
+              
+              <p>Best regards,<br>
+              <strong>The MyInvestar Team</strong><br>
+              Powered by First Ally Asset Management</p>
+              
+              <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                This email was sent to ${email}. If you didn't apply to become a Star Ambassador, please ignore this email.
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  };
+};
+
+exports.handler = async (event, context) => {
+  // Handle CORS preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: ''
     };
   }
@@ -25,141 +137,60 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers,
-      body: JSON.stringify({ message: 'Method Not Allowed' })
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
-    // Initialize Resend with environment variable
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    // Parse request body
-    const { firstName, email } = JSON.parse(event.body);
-
+    const applicantData = JSON.parse(event.body);
+    
     // Validate required fields
-    if (!firstName || !email) {
+    if (!applicantData.email || !applicantData.firstName) {
       return {
         statusCode: 400,
-        headers,
         body: JSON.stringify({ 
-          message: 'Missing required fields: firstName and email' 
+          success: false, 
+          error: 'Missing required fields' 
         })
       };
     }
 
-    // Send email
-    const { data, error } = await resend.emails.send({
-      from: 'MyInvestar Team <hello@myinvestar.ng>',
-      to: [email],
-      subject: 'Thank You for Your Star Ambassador Application',
-      html: generateEmailHTML(firstName),
-    });
+    // Send confirmation email
+    const emailTemplate = getConfirmationEmailTemplate(applicantData);
+    const result = await resend.emails.send(emailTemplate);
 
-    if (error) {
-      console.error('Resend API error:', error);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ 
-          message: 'Failed to send email',
-          error: error.message 
-        })
-      };
-    }
-
+    console.log('Email sent:', result);
+    
     return {
       statusCode: 200,
-      headers,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST'
+      },
       body: JSON.stringify({ 
-        message: 'Email sent successfully!',
-        id: data.id 
+        success: true, 
+        id: result.data?.id 
       })
     };
-
+    
   } catch (error) {
-    console.error('Function error:', error);
+    console.error('Error sending email:', error);
+    
     return {
       statusCode: 500,
-      headers,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
       body: JSON.stringify({ 
-        message: 'Internal server error',
-        error: error.message 
+        success: false, 
+        error: 'Failed to send confirmation email' 
       })
     };
   }
 };
-
-function generateEmailHTML(firstName) {
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to MyInvestar Star Ambassador Program</title>
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-        <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 0;">
-            <!-- Header with Logo -->
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
-                <img src="https://myinvestar.ng/images/myinvestar_logo_white.png" alt="MyInvestar Logo" style="width: 180px; height: auto;">
-            </div>
-            
-            <!-- Main Content -->
-            <div style="padding: 40px 30px;">
-                <h1 style="color: #333; font-size: 28px; margin-bottom: 20px; text-align: center;">
-                    Thank You, ${firstName}!
-                </h1>
-                
-                <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                    We have successfully received your application to become a <strong>MyInvestar Star Ambassador</strong>!
-                </p>
-                
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 30px 0; border-left: 4px solid #667eea;">
-                    <h3 style="color: #333; margin-top: 0; margin-bottom: 15px;">What happens next?</h3>
-                    <ul style="color: #666; margin: 0; padding-left: 20px;">
-                        <li style="margin-bottom: 10px;">Our team will review your application carefully</li>
-                        <li style="margin-bottom: 10px;">We'll contact you within 5-7 business days</li>
-                        <li style="margin-bottom: 10px;">If selected, you'll receive onboarding materials and next steps</li>
-                    </ul>
-                </div>
-                
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 10px; text-align: center; margin: 30px 0;">
-                    <h3 style="color: white; margin: 0; font-size: 18px;">Ready to Start Your Financial Journey?</h3>
-                    <p style="color: white; margin: 10px 0; font-size: 14px;">While you wait, download the MyInvestar app and start building wealth today!</p>
-                    
-                    <div style="margin-top: 20px;">
-                        <a href="https://apps.apple.com/ng/app/myInvester/id1620126521" style="display: inline-block; margin: 0 10px;">
-                            <img src="https://myinvestar.ng/images/apple_white.png" alt="Download on App Store" style="height: 40px;">
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.firstally.myinvestar&pli=1" style="display: inline-block; margin: 0 10px;">
-                            <img src="https://myinvestar.ng/images/google_white.png" alt="Get it on Google Play" style="height: 40px;">
-                        </a>
-                    </div>
-                </div>
-                
-                <p style="color: #666; font-size: 16px; line-height: 1.6; text-align: center;">
-                    Have questions? Reply to this email or contact us at 
-                    <a href="mailto:hello@myinvestar.ng" style="color: #667eea; text-decoration: none;">hello@myinvestar.ng</a>
-                </p>
-            </div>
-            
-            <!-- Footer -->
-            <div style="background: #f8f9fa; padding: 30px; text-align: center; border-top: 1px solid #eee;">
-                <p style="color: #999; font-size: 14px; margin: 0;">
-                    © ${new Date().getFullYear()} MyInvestar. All rights reserved.<br>
-                    Powered by <a href="https://first-allyasset.com/" style="color: #667eea; text-decoration: none;">First Ally Asset Management</a>
-                </p>
-                
-                <div style="margin: 20px 0;">
-                    <a href="https://www.facebook.com/profile.php?id=100080170355072" style="margin: 0 10px; color: #667eea; text-decoration: none;">Facebook</a>
-                    <a href="https://twitter.com/myinvestar" style="margin: 0 10px; color: #667eea; text-decoration: none;">Twitter</a>
-                    <a href="https://www.instagram.com/myinvestarng/" style="margin: 0 10px; color: #667eea; text-decoration: none;">Instagram</a>
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>
-  `;
-}
