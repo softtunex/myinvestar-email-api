@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 // The domain of your MAIN website. This is a crucial security step.
 // The browser will only allow your website to call this function.
-const ALLOWED_ORIGIN = 'https://www.myinvestar.ng'; // <-- IMPORTANT: REPLACE WITH YOUR ACTUAL WEBSITE DOMAIN
+const ALLOWED_ORIGIN = 'http://127.0.0.1:5503/'; // <-- IMPORTANT: REPLACE WITH YOUR ACTUAL WEBSITE DOMAIN
 
 export const handler = async (event) => {
   // Get the Resend API key from secure environment variables
