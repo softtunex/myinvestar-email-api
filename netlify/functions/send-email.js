@@ -3,7 +3,7 @@ const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Email template function with the new, modern UI
+// Email template function with the new, clean UI
 const getConfirmationEmailTemplate = (applicantData) => {
   const { firstName, email } = applicantData;
   
@@ -53,7 +53,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
                 <a href="https://play.google.com/store/apps/details?id=com.firstally.myinvestar&pli=1" style="display: inline-block; margin: 0 8px;">
                   <img src="https://ci3.googleusercontent.com/proxy/2-X_4NtmHi2sQ_I9857BwI6A7-2oLa-dSoR42bJPf9nvn34BlETDIqf-9-9b4w1-Q20XQ=s0-d-e1-ft#https://gallery.mailchimp.com/27aac56736a0b4b6de43548e6/images/3f20e4b8-a6fe-4d51-89a1-a67bcebe7ceb.png" alt="Get it on Google Play" style="height: 45px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 </a>
-              </div>
+              </div
             </div>
 
           </div>
@@ -75,6 +75,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
     `
   };
 };
+
 
 // YOUR ORIGINAL HANDLER LOGIC IS FULLY RESTORED BELOW
 exports.handler = async (event, context) => {
