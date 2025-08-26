@@ -25,11 +25,11 @@ const getConfirmationEmailTemplate = (applicantData) => {
           <div style="padding: 4px">
             <div style="text-align: center; margin-bottom: 30px;">
              
-              <h1 style="color: #d0af2b; font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Application Received!</h1>
-              <p style="color: #666; font-size: 16px; margin: 0;">Thank you for your interest in becoming a Star Ambassador</p>
+              // <h1 style="color: #d0af2b; font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Application Received!</h1>
+              <p style="color: #d0af2b; font-size: 16px; margin: 0;">Thank you for your interest in becoming a Star Ambassador</p>
             </div>
 
-            <div style="background: #f8f9fa; padding: 5px; margin-bottom: 30px;">
+            <div style="background: #ffffff; padding: 5px; margin-bottom: 30px;">
               <p style="font-size: 18px; color: #333; margin: 0 0 15px 0;"><strong>Hello ${firstName},</strong></p>
               <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">We have successfully received your Star Ambassador application and our team is excited to review it.</p>
               <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">We appreciate your enthusiasm for representing the MyInvestar brand. Our team will carefully evaluate your application and get back to you soon with the next steps.</p>
@@ -39,7 +39,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
               </p>
             </div>
  <!-- Footer Section -->
-          <div style="background-color:#d0af2b; padding: 30px 20px; text-align: center;">
+          <div style="background-color:#323e48; padding: 30px 20px; text-align: center;">
             <!-- Call to Action Section -->
             <div style="text-align: center; margin-bottom: 30px;">
               <p style="margin-bottom: 20px; font-size: 16px;">While you wait, why not explore our app?</p>
