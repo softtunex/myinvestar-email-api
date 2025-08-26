@@ -25,7 +25,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
           <div style="padding: 4px">
             <div style="text-align: center; margin-bottom: 30px;">
              
-              // <h1 style="color: #d0af2b; font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Application Received!</h1>
+              <!-- <h1 style="color: #d0af2b; font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Application Received!</h1>-->
               <p style="color: #d0af2b; font-size: 16px; margin: 0;">Thank you for your interest in becoming a Star Ambassador</p>
             </div>
 
@@ -39,7 +39,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
               </p>
             </div>
  <!-- Footer Section -->
-          <div style="background-color:#323e48; padding: 30px 20px; text-align: center;">
+          <div style="background-color:#323e48; padding: 30px 20px; text-align: center; color:#ffffff">
             <!-- Call to Action Section -->
             <div style="text-align: center; margin-bottom: 30px;">
               <p style="margin-bottom: 20px; font-size: 16px;">While you wait, why not explore our app?</p>
