@@ -108,9 +108,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
               <strong>The MyInvestar Team</strong><br>
               Powered by First Ally Asset Management</p>
               
-              <p style="font-size: 12px; color: #999; margin-top: 20px;">
-                This email was sent to ${email}. If you didn't apply to become a Star Ambassador, please ignore this email.
-              </p>
+             
             </div>
           </div>
         </body>
