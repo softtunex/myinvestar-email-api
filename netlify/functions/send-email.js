@@ -26,13 +26,14 @@ const getConfirmationEmailTemplate = (applicantData) => {
             <div style="text-align: center; margin-bottom: 30px;">
              
               <!-- <h1 style="color: #d0af2b; font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Application Received!</h1>-->
-              <p style="color: #d0af2b; font-size: 16px; margin: 0;">Thank you for your interest in becoming a Star Ambassador</p>
+              <p style="color: #d0af2b; font-size: 16px; margin: 0;">Thank You for Your Star Ambassador Application</p>
             </div>
 
             <div style="background: #ffffff; padding: 5px; margin-bottom: 30px;">
               <p style="font-size: 18px; color: #333; margin: 0 0 15px 0;"><strong>Hello ${firstName},</strong></p>
-              <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">We have successfully received your Star Ambassador application and our team is excited to review it.</p>
-              <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">We appreciate your enthusiasm for representing the MyInvestar brand. Our team will carefully evaluate your application and get back to you soon with the next steps.</p>
+              <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">Thank you for applying to become a Star Ambassador. We have received your application and our team will review it shortly.
+</p>
+              <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">We appreciate your interest in representing our brand, and we will get back to you soon regarding the next steps.</p>
               <p style="font-size: 16px; color: #555; margin: 0;">
                 <strong>Best regards,</strong><br>
                 <span style="color: #d0af2b;">The MyInvestar Team</span>
