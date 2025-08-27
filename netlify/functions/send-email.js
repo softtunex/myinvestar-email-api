@@ -8,7 +8,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
   const { firstName, email } = applicantData;
   
   return {
-    from: 'The MyInvestar Team <hello@myinvestar.ng>',
+    from: 'MyInvestar <hello@myinvestar.ng>',
     to: [email],
     subject: 'Thank You for Your Star Ambassador Application',
     // UPDATED MODERN DESIGN
