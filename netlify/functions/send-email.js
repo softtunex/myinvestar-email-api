@@ -10,7 +10,7 @@ const getConfirmationEmailTemplate = (applicantData) => {
   return {
     from: 'MyInvestar <hello@myinvestar.ng>',
     to: [email],
-    subject: 'Thank You for Your Star Ambassador Application',
+    subject: 'Thank You for Applying to be a Star Ambassador',
     // UPDATED MODERN DESIGN
     html: `
       <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f8f9fa;">
