@@ -80,9 +80,9 @@ exports.handler = async (event, context) => {
 
     // 1. Send to Staff (Otega & Sales) with CC to Operations
     await resend.emails.send({
-      from: 'First Ally Asset Management <sales@first-allyasset.com>', // Verify this domain in Resend
-      to: ['otega.ovie@first-ally.com', 'sales@first-ally.com'],
-      cc: ['operations@first-ally.com'],
+      from: 'First Ally Asset Management <olatunji.buari@first-allyasset.com>', // Verify this domain in Resend
+      to: ['olatunji.buarie@first-ally.com', 'olatunji.buari@first-ally.com'],
+      cc: ['olatunjibuari8@Gmail.com@first-ally.com'],
       subject: 'FAAM Gift Box Purchase',
       html: staffMail
     });
@@ -91,7 +91,7 @@ exports.handler = async (event, context) => {
     await resend.emails.send({
       from: 'First Ally Asset Management <sales@first-allyasset.com>',
       to: [email],
-      cc: ['operations@first-ally.com'], 
+      cc: ['olatunji.buari@first-ally.com'], 
       subject: 'FAAM Gift Box Purchase',
       html: customerMail
     });
