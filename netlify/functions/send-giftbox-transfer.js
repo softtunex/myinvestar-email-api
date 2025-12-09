@@ -142,7 +142,7 @@ const getCustomerEmailTemplate = (orderData) => {
   const firstName = othernames.split(' ')[0];
   
   return {
-    from: 'First Ally Asset Management <sales@first-allyasset.com>',
+    from: 'First Ally Asset Management <hello@myinvestar.ng>',
     to: [email],
     subject: 'FAAM Gift Box Purchase',
     html: `
