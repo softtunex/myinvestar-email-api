@@ -2,16 +2,35 @@ const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Define CORS headers
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 exports.handler = async (event, context) => {
-  // Only allow POST
+  // 1. Handle Preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
+  // 2. Only allow POST
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { 
+      statusCode: 405, 
+      headers,
+      body: 'Method Not Allowed' 
+    };
   }
 
   try {
     const data = JSON.parse(event.body);
 
-    // Map variables
     const title = data.title;
     const surname = data.surname;
     const othernames = data.other_names;
@@ -31,8 +50,7 @@ exports.handler = async (event, context) => {
     const dateStr = new Date().toLocaleString('en-GB', { timeZone: 'Africa/Lagos', hour12: true });
     const firstName = othernames.split(' ')[0];
 
-    // --- EXACT CONTENT FROM YOUR PHP FILE ---
-
+    // --- CONTENT ---
     const mailBody = `<p>Title: <strong>${title}</strong><br>
                     Surname: <strong>${surname}</strong><br>
                     Other Names: <strong>${othernames}</strong><br>
@@ -61,9 +79,9 @@ exports.handler = async (event, context) => {
         You will be notified when this is done.<br>Find details of the package below:</p>
         <h3>Your details</h3>` + mailBody + `<br><br>Thank you.`;
 
-    // --- SENDING LOGIC (Matching your PHP recipients) ---
+    // --- SENDING ---
 
-    // 1. Send to Olatunji (CCing himself as per your PHP headers)
+    // 1. Send to Olatunji
     await resend.emails.send({
       from: 'First Ally Asset Management <sales@first-allyasset.com>',
       to: ['olatunji.buari@first-ally.com'],
@@ -72,7 +90,7 @@ exports.handler = async (event, context) => {
       html: staffMail
     });
 
-    // 2. Send to Customer (CCing Olatunji as per your PHP headers)
+    // 2. Send to Customer
     await resend.emails.send({
       from: 'First Ally Asset Management <sales@first-allyasset.com>',
       to: [email],
@@ -83,11 +101,16 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
+      headers, // <--- Send headers back
       body: JSON.stringify({ success: true })
     };
 
   } catch (error) {
     console.error('Card Email Error:', error);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Failed to send email' }) };
+    return { 
+      statusCode: 500, 
+      headers, // <--- Send headers back
+      body: JSON.stringify({ error: 'Failed to send email' }) 
+    };
   }
 };
