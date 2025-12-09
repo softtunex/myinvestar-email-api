@@ -13,8 +13,8 @@ const getStaffEmailTemplate = (orderData) => {
   
   return {
     from: 'First Ally Asset Management <hello@myinvestar.ng>',
-    to: ['olatunji.buari@first-ally.com', 'olatunji.buari@first-ally.com'],
-    cc: ['olatunji.buari@first-ally.com'],
+    to: ['sales@first-ally.com'],
+    cc: ['operations@first-ally.com'],
     subject: 'FAAM Gift Box Purchase',
     html: `
       <!DOCTYPE html>
@@ -171,7 +171,7 @@ const getCustomerEmailTemplate = (orderData) => {
             </div>
 
             <!-- Bank Account Details -->
-            <div style="background-color: #d0af2b; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
               <h4 style="color: #ffffff; margin: 0 0 15px 0; font-size: 18px;">Bank Account Details</h4>
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
