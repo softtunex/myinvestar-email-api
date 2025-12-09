@@ -13,8 +13,8 @@ const getStaffEmailTemplate = (orderData) => {
   
   return {
     from: 'First Ally Asset Management <sales@first-allyasset.com>',
-    to: ['otega.ovie@first-ally.com', 'sales@first-ally.com'],
-    cc: ['operations@first-ally.com'],
+    to: ['olatunji.buari@first-ally.com', 'olatunji.buari@first-ally.com'],
+    cc: ['olatunji.buari@first-ally.com'],
     subject: 'FAAM Gift Box Purchase',
     html: `
       <!DOCTYPE html>
